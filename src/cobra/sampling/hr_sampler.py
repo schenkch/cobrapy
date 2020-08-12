@@ -244,7 +244,7 @@ class HRSampler(object):
             homogeneous=homogeneous,
         )
 
-    def generate_fva_warmup(self):
+    def generate_fva_warmup(self, includeReversible=False):
         """Generate the warmup points for the sampler.
 
         Generates warmup points by setting each flux as the sole objective
@@ -252,11 +252,27 @@ class HRSampler(object):
         warmup points into the nullspace for non-homogeneous problems (only
         if necessary).
 
+        Parameters
+        ----------
+        includeReversible : boolean
+            Whether to include warmup samples that move in the direction
+            of altering forward and backward fluxes, without altering net flux
+            (e.g. altering circulation or exchange flux). This is useful for
+            samplers fitting to 13C MFA (Metabolic Flux Analysis) data, where
+            reverse fluxes are considered. If set to False, the warmup points
+            will only allow the sampler to move in directions that change 
+            the net flux of reactions.
+
         """
 
         self.n_warmup = 0
         reactions = self.model.reactions
-        self.warmup = np.zeros((2 * len(reactions), len(self.model.variables)))
+        if includeReversible:
+            # make warmup matrix big enough to include reversible reactions
+            warmupPoints = 2 * (len(reactions) + sum([r.reversibility for r in reactions]))
+        else:
+            warmupPoints = 2 * len(reactions)
+        self.warmup = np.zeros((warmupPoints, len(self.model.variables)))
         self.model.objective = Zero
 
         for sense in ("min", "max"):
@@ -292,6 +308,29 @@ class HRSampler(object):
                 self.model.objective.set_linear_coefficients(
                     {variables[0]: 0, variables[1]: 0}
                 )
+
+                # If reaction is reversible and includeReversible=True
+                # we will consider directions which maximize circulation
+                # flux by maximizing both the forward and reverse directions
+                # of the same reaction.
+                if includeReversible and r.reversibility:
+
+                    # both coefficients are positive to maximize
+                    # circulation within this reaction
+                    self.model.objective.set_linear_coefficients(
+                        {variables[0]: 1, variables[1]: 1})
+                    self.model.slim_optimize()
+                    if not self.model.solver.status == OPTIMAL:
+                        LOGGER.info("can not maximize reaction %s, skipping it" %
+                                    r.id)
+                        continue
+                    primals = self.model.solver.primal_values
+                    sol = [primals[v.name] for v in self.model.variables]
+                    self.warmup[self.n_warmup, ] = sol
+                    self.n_warmup += 1
+                    # Reset objective
+                    self.model.objective.set_linear_coefficients(
+                        {variables[0]: 0, variables[1]: 0})
 
         # Shrink to measure
         self.warmup = self.warmup[0 : self.n_warmup, :]
