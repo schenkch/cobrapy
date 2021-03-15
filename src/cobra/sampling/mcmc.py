@@ -83,7 +83,7 @@ class MCMCACHRSampler(HRSampler):
     due to the required nullspace matrices and warmup points. So large
     models easily take up a few GB of RAM.
 
-    This MCMC version of the ACHR sampler has been updated to accept a 
+    This MCMC version of the ACHR sampler has been updated to accept a
     prior and/or likelihood function during sampling, for MCMC Bayesian Inference
     of metabolic fluxes. The sampler should first be 'centered' by not passing
     these function, with sufficient samples for the center to converge.
@@ -102,13 +102,21 @@ class MCMCACHRSampler(HRSampler):
     .. [3] Equation of State Calculations by Fast Computing Machines
        Nicholas Metropolis et al.
        J. Chem. Phys. 21 (6): 1087.
-       https://doi.org/10.1063%2F1.1699114 
+       https://doi.org/10.1063%2F1.1699114
 
     """
 
-    def __init__(self, model, thinning=100, nproj=None, seed=None):
+    def __init__(self, model, thinning=100, nproj=None, seed=None, feas_tol=None):
         """Initialize a new MCMCACHRSampler."""
-        super(MCMCACHRSampler, self).__init__(model, thinning, nproj=nproj, seed=seed)
+
+        # introduce new parameter feas_tol, such that it can be user-defined and for MCMCACHRSampler class has new default value
+        if feas_tol is not None:
+            self.feasibility_tol=feas_tol #if user-provided set to user tolerance
+        else:
+            feas_tol= 1e-6 #else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy
+            self.feasibility_tol=feas_tol
+
+        super(MCMCACHRSampler, self).__init__(model, thinning, nproj=nproj, seed=seed, feas_tol=feas_tol)
         self.generate_fva_warmup(includeReversible=True)
         self.prev = self.center = self.warmup.mean(axis=0)
         np.random.seed(self._seed)
@@ -117,7 +125,7 @@ class MCMCACHRSampler(HRSampler):
         self.bestSample = None
 
     def __single_iteration(self, lockCenter=False):
-        """If lockCenter, do not update the center.""" 
+        """If lockCenter, do not update the center."""
 
         pi = np.random.randint(self.n_warmup)
 
@@ -192,7 +200,7 @@ class MCMCACHRSampler(HRSampler):
         if prior or likelihood:
             lockCenter = True
         else:
-            lockCenter = False 
+            lockCenter = False
 
         for i in range(1, self.thinning * n + 1):
             self.__single_iteration(lockCenter=lockCenter)
@@ -211,7 +219,7 @@ class MCMCACHRSampler(HRSampler):
                 acceptProbability = newPosterior - previousPosterior
                 if not previousPosterior:
                     # always accept on first iteration
-                    previousPosterior = newPosterior 
+                    previousPosterior = newPosterior
                     savePrev = self.prev
                 elif np.log(np.random.rand()) < acceptProbability:
                     # then accept if probability is high enough
