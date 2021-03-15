@@ -128,8 +128,12 @@ class HRSampler(object):
         The cobra model from which the sampes get generated.
     feasibility_tol: float
         The tolerance used for checking equalities feasibility.
+    val_feasibility_tol: float
+        The tolerance used for checking equalities feasibility but just for validate function.
     bounds_tol: float
         The tolerance used for checking bounds feasibility.
+    val_bounds_tol: float
+        The tolerance used for checking bounds feasibility but just for validate function.
     thinning : int
         The currently used thinning factor.
     n_samples : int
@@ -159,7 +163,7 @@ class HRSampler(object):
 
     """
 
-    def __init__(self, model, thinning, nproj=None, seed=None, feas_tol=None):
+    def __init__(self, model, thinning, nproj=None, seed=None, feas_tol=None, bounds_tol=None):
         """Initialize a new sampler object."""
 
         # This currently has to be done to reset the solver basis which is
@@ -170,12 +174,21 @@ class HRSampler(object):
 
         self.model = model.copy()
 
-        # introduce new parameter feas_tol, such that it can be user-defined and for MCMCACHRSampler class has new default value
+        # introduce new parameter feas_tol for equality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
         if feas_tol is not None:
-            self.feasibility_tol=feas_tol #if user provided set to user tolerance
+            self.val_feasibility_tol = feas_tol #if user provided set to user tolerance
+            print('Different feasibility tolerance for validate function was provided!')
         else:
-            self.feasibility_tol = model.tolerance #else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy
+            self.val_feasibility_tol = model.tolerance #else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy
 
+        # introduce new parameter bounds_tol for inequality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
+        if bounds_tol is not None:
+            self.val_bounds_tol = bounds_tol #if user provided set to user tolerance
+            print('Different bounds tolerance for validate function was provided!')
+        else:
+            self.val_bounds_tol = model.tolerance #else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy
+
+        self.feasibility_tol = model.tolerance
         self.bounds_tol = model.tolerance
         self.thinning = thinning
 
@@ -540,20 +553,20 @@ class HRSampler(object):
             ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1))
 
         valid = (
-            (feasibility < self.feasibility_tol)
-            & (lb_error > -self.bounds_tol)
-            & (ub_error > -self.bounds_tol)
+            (feasibility < self.val_feasibility_tol)
+            & (lb_error > -self.val_bounds_tol)
+            & (ub_error > -self.val_bounds_tol)
         )
         codes = np.repeat("", valid.shape[0]).astype(np.dtype((str, 3)))
         codes[valid] = "v"
-        codes[lb_error <= -self.bounds_tol] = np.char.add(
-            codes[lb_error <= -self.bounds_tol], "l"
+        codes[lb_error <= -self.val_bounds_tol] = np.char.add(
+            codes[lb_error <= -self.val_bounds_tol], "l"
         )
-        codes[ub_error <= -self.bounds_tol] = np.char.add(
-            codes[ub_error <= -self.bounds_tol], "u"
+        codes[ub_error <= -self.val_bounds_tol] = np.char.add(
+            codes[ub_error <= -self.val_bounds_tol], "u"
         )
-        codes[feasibility > self.feasibility_tol] = np.char.add(
-            codes[feasibility > self.feasibility_tol], "e"
+        codes[feasibility > self.val_feasibility_tol] = np.char.add(
+            codes[feasibility > self.val_feasibility_tol], "e"
         )
 
         return codes
