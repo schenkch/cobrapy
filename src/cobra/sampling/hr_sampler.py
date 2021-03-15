@@ -159,7 +159,7 @@ class HRSampler(object):
 
     """
 
-    def __init__(self, model, thinning, nproj=None, seed=None):
+    def __init__(self, model, thinning, nproj=None, seed=None, feas_tol=None):
         """Initialize a new sampler object."""
 
         # This currently has to be done to reset the solver basis which is
@@ -169,7 +169,13 @@ class HRSampler(object):
             raise TypeError("sampling does not work with integer problems :(")
 
         self.model = model.copy()
-        self.feasibility_tol = model.tolerance
+
+        # introduce new parameter feas_tol, such that it can be user-defined and for MCMCACHRSampler class has new default value
+        if feas_tol is not None:
+            self.feasibility_tol=feas_tol #if user provided set to user tolerance
+        else:
+            self.feasibility_tol = model.tolerance #else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy
+
         self.bounds_tol = model.tolerance
         self.thinning = thinning
 
@@ -260,7 +266,7 @@ class HRSampler(object):
             (e.g. altering circulation or exchange flux). This is useful for
             samplers fitting to 13C MFA (Metabolic Flux Analysis) data, where
             reverse fluxes are considered. If set to False, the warmup points
-            will only allow the sampler to move in directions that change 
+            will only allow the sampler to move in directions that change
             the net flux of reactions.
 
         """
