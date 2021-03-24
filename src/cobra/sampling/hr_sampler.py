@@ -163,7 +163,7 @@ class HRSampler(object):
 
     """
 
-    def __init__(self, model, thinning, nproj=None, seed=None, feas_tol=None, bounds_tol=None):
+    def __init__(self, model, thinning, nproj=None, seed=None):
         """Initialize a new sampler object."""
 
         # This currently has to be done to reset the solver basis which is
@@ -173,21 +173,6 @@ class HRSampler(object):
             raise TypeError("sampling does not work with integer problems :(")
 
         self.model = model.copy()
-
-        # introduce new parameter feas_tol for equality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
-        if feas_tol is not None:
-            self.val_feasibility_tol = feas_tol #if user provided set to user tolerance
-            print('Different feasibility tolerance for validate function was provided!')
-        else:
-            self.val_feasibility_tol = model.tolerance #else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy
-
-        # introduce new parameter bounds_tol for inequality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
-        if bounds_tol is not None:
-            self.val_bounds_tol = bounds_tol #if user provided set to user tolerance
-            print('Different bounds tolerance for validate function was provided!')
-        else:
-            self.val_bounds_tol = model.tolerance #else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy
-
         self.feasibility_tol = model.tolerance
         self.bounds_tol = model.tolerance
         self.thinning = thinning
@@ -498,7 +483,7 @@ class HRSampler(object):
         for i in range(batch_num):
             yield self.sample(batch_size, fluxes=fluxes)
 
-    def validate(self, samples):
+    def validate(self, samples, feas_tol=None, bounds_tol=None):
         """Validate a set of samples for equality and inequality feasibility.
 
         Can be used to check whether the generated samples and warmup points
@@ -522,6 +507,20 @@ class HRSampler(object):
             - 'e' means and equality constraint violation
 
         """
+
+        # introduce new parameter feas_tol for equality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
+        if feas_tol is not None:
+            self.val_feasibility_tol = feas_tol  # if user provided set to user tolerance
+            print('Different feasibility tolerance for validate function was provided, i.e.', feas_tol)
+        else:
+            self.val_feasibility_tol = 1e-6  # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.feasibility_tol)
+
+        # introduce new parameter bounds_tol for inequality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
+        if bounds_tol is not None:
+            self.val_bounds_tol = bounds_tol  # if user provided set to user tolerance
+            print('Different bounds tolerance for validate function was provided, i.e.', bounds_tol)
+        else:
+            self.val_bounds_tol = 1e-6 # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.bounds_tol)
 
         samples = np.atleast_2d(samples)
         prob = self.problem
