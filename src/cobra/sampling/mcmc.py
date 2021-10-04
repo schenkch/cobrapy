@@ -212,12 +212,12 @@ class MCMCACHRSampler(HRSampler):
                 newPosterior = newLikelihood + newPrior
                 acceptProbability = newPosterior - previousPosterior
                 if acceptProbability<=0:
-                    print('acceptProbabililty', acceptProbability, ' and not between 0 and 1')
+                    print('acceptProbabililty', acceptProbability)
                 if not previousPosterior:
                     # always accept on first iteration
                     previousPosterior = newPosterior
                     savePrev = self.prev
-                elif np.log(np.random.rand()) < acceptProbability:
+                elif np.log(np.random.rand()) <= acceptProbability:#changed to <= CS
                     # then accept if probability is high enough
                     previousPosterior = newPosterior
                     savePrev = self.prev
