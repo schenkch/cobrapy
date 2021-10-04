@@ -211,7 +211,7 @@ class MCMCACHRSampler(HRSampler):
                     newPrior = 0
                 newPosterior = newLikelihood + newPrior
                 acceptProbability = newPosterior - previousPosterior
-                if acceptProbability<0 or acceptProbability>1:
+                if acceptProbability<=0:
                     print('acceptProbabililty', acceptProbability, ' and not between 0 and 1')
                 if not previousPosterior:
                     # always accept on first iteration
