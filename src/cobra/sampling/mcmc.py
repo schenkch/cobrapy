@@ -207,6 +207,7 @@ class MCMCACHRSampler(HRSampler):
                     newLikelihood = 0
                 if prior:
                     newPrior = prior(self.prev)
+                    print('newPrior', newPrior)
                 else:
                     newPrior = 0
                 newPosterior = newLikelihood + newPrior
