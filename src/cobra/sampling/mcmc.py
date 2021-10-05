@@ -212,8 +212,8 @@ class MCMCACHRSampler(HRSampler):
                 newPosterior = newLikelihood + newPrior
                 acceptProbability = newPosterior/previousPosterior
                 euclideandist = np.linalg.norm(newPosterior - previousPosterior)
-                if euclideandist<=0:
-                    print('Euclidean Distance between Samples', euclideandist)
+                #if euclideandist<=0:
+                print('Euclidean Distance between Samples', euclideandist)
                 if acceptProbability<=0:
                     print('acceptProbabililty', acceptProbability)
                 if not previousPosterior:
