@@ -192,7 +192,7 @@ class MCMCACHRSampler(HRSampler):
         # determine if we are doing centering samples, or MCMC samples
         # with a locked center
         if prior or likelihood:
-            display('center', self.center, 'likelihood center', likelihood(self.center), 'likelihood prev', likelihood(self.prev)
+            display('center', self.center, 'likelihood center', likelihood(self.center), 'likelihood prev', likelihood(self.prev))
             lockCenter = True
         else:
             lockCenter = False
