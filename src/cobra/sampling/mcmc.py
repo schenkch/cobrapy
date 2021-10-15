@@ -134,7 +134,7 @@ class MCMCACHRSampler(HRSampler):
             self.center = ((self.n_samples * self.center) / (self.n_samples + 1) +
                            self.prev / (self.n_samples + 1))
         self.n_samples += 1
-        display('center', self.center)
+        #display('center', self.center)
 
     def sample(self, n, fluxes=True, likelihood=None, prior=None):
         """Generate a set of samples.
