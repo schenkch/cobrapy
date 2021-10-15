@@ -241,7 +241,7 @@ class MCMCACHRSampler(HRSampler):
             if i % self.thinning == 0:
                 samples[i // self.thinning - 1, :] = self.prev
             if i==self.thinning*n:
-                print('Last Likelihood', newLikelihood)
+                print('Last Likelihood', likelihood(self.prev))
 
         print('acceptance rate: ' + str(float(totalSamples - rejections) / float(totalSamples)))
         if float(totalSamples - rejections) / float(totalSamples)<0 or float(totalSamples - rejections) / float(totalSamples)>1:
