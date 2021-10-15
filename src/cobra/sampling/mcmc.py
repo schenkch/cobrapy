@@ -185,7 +185,7 @@ class MCMCACHRSampler(HRSampler):
 
         # store the log posterior of the previous sample
         previousPosterior = False
-        savePref = False
+        savePrev = False
         totalSamples = 0
         rejections = 0
 
@@ -194,7 +194,7 @@ class MCMCACHRSampler(HRSampler):
         if prior or likelihood:
             display('center', self.center, 'likelihood center', likelihood(self.center), 'likelihood prev', likelihood(self.prev))
             lockCenter = True
-            self.center = self.prev#added!
+            #self.center = self.prev#added!
         else:
             lockCenter = False
 
