@@ -205,21 +205,21 @@ class MCMCACHRSampler(HRSampler):
             if lockCenter:
                 if likelihood:
                     newLikelihood = likelihood(self.prev)
-                    print('newLikelihood', newLikelihood)
+                    #print('newLikelihood', newLikelihood)
                 else:
                     newLikelihood = 0
                 if prior:
                     newPrior = prior(self.prev)
-                    print('newPrior', newPrior)
+                    #print('newPrior', newPrior)
                 else:
                     newPrior = 0
                 newPosterior = newLikelihood + newPrior
                 acceptProbability = newPosterior-previousPosterior
-                euclideandist = np.linalg.norm(newPosterior - previousPosterior)
+                #euclideandist = np.linalg.norm(newPosterior - previousPosterior)
                 #if euclideandist<=0:
-                print('Euclidean Distance between Samples', euclideandist)
+                #print('Euclidean Distance between Samples', euclideandist)
                 if acceptProbability<=0:
-                    print('acceptProbabililty', acceptProbability)
+                    print('acceptProbabililty is less than 0', acceptProbability)
                 if not previousPosterior:
                     # always accept on first iteration
                     previousPosterior = newPosterior
