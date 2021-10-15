@@ -111,7 +111,7 @@ class MCMCACHRSampler(HRSampler):
 
         super(MCMCACHRSampler, self).__init__(model, thinning, nproj=nproj, seed=seed)
         self.generate_fva_warmup(includeReversible=True)
-        self.prev = self.center = self.warmup.mean(axis=0)
+        self.prev = self.center #= self.warmup.mean(axis=0)
         np.random.seed(self._seed)
 
         # create a variable to store the best point we sampled
@@ -134,6 +134,7 @@ class MCMCACHRSampler(HRSampler):
             self.center = ((self.n_samples * self.center) / (self.n_samples + 1) +
                            self.prev / (self.n_samples + 1))
         self.n_samples += 1
+        display('center', self.center)
 
     def sample(self, n, fluxes=True, likelihood=None, prior=None):
         """Generate a set of samples.
