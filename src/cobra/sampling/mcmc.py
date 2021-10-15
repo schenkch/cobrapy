@@ -111,7 +111,7 @@ class MCMCACHRSampler(HRSampler):
 
         super(MCMCACHRSampler, self).__init__(model, thinning, nproj=nproj, seed=seed)
         self.generate_fva_warmup(includeReversible=True)
-        self.prev = self.center #= self.warmup.mean(axis=0)
+        self.prev = self.center = self.warmup.mean(axis=0)
         np.random.seed(self._seed)
 
         # create a variable to store the best point we sampled
@@ -192,6 +192,7 @@ class MCMCACHRSampler(HRSampler):
         # determine if we are doing centering samples, or MCMC samples
         # with a locked center
         if prior or likelihood:
+            display('center', self.center, 'likelihood center', likelihood(self.center), 'likelihood prev', likelihood(self.prev)
             lockCenter = True
         else:
             lockCenter = False
@@ -222,7 +223,7 @@ class MCMCACHRSampler(HRSampler):
                     # always accept on first iteration
                     previousPosterior = newPosterior
                     savePrev = self.prev
-                elif np.random.rand() <= np.exp(acceptProbability):#changed to <= CS
+                elif np.random.rand() < np.exp(acceptProbability):#changed to <= CS
                     # then accept if probability is high enough
                     previousPosterior = newPosterior
                     savePrev = self.prev
