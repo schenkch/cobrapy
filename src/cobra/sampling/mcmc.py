@@ -184,7 +184,7 @@ class MCMCACHRSampler(HRSampler):
 
         # store the log posterior of the previous sample
         previousPosterior = False
-        savePref = False
+        savePrev = False
         totalSamples = 0
         rejections = 0
 
