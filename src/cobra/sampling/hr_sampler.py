@@ -178,7 +178,8 @@ class HRSampler(object):
         self.thinning = thinning
 
         if nproj is None:
-            self.nproj = int(min(len(self.model.variables) ** 3, 1e6))
+            if sampler != MCMCACHRSampler:
+                self.nproj = int(min(len(self.model.variables) ** 3, 1e6))
         else:
             self.nproj = nproj
 
@@ -541,7 +542,6 @@ class HRSampler(object):
                 "column for each flux or variable defined in the "
                 "model!"
             )
-        print(S)
 
         feasibility = np.abs(S.dot(samples.T).T - b).max(axis=1)
         lb_error = (samples - bounds[0,]).min(axis=1)
