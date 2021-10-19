@@ -194,7 +194,7 @@ class MCMCACHRSampler(HRSampler):
         if prior or likelihood:
             display('center', self.center, 'likelihood center', likelihood(self.center), 'likelihood prev', likelihood(self.prev))
             lockCenter = True
-            #self.center = self.prev#added!
+            self.center = self.prev#added!
         else:
             lockCenter = False
 
