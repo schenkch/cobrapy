@@ -533,7 +533,6 @@ class HRSampler(object):
             bounds = np.array([r.bounds for r in self.model.reactions]).T
         elif samples.shape[1] == len(self.model.variables):
             S = prob.equalities
-            print(S)
             b = prob.b
             bounds = prob.variable_bounds
         else:
@@ -542,6 +541,7 @@ class HRSampler(object):
                 "column for each flux or variable defined in the "
                 "model!"
             )
+        print(S)
 
         feasibility = np.abs(S.dot(samples.T).T - b).max(axis=1)
         lb_error = (samples - bounds[0,]).min(axis=1)
