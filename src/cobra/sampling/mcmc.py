@@ -125,11 +125,11 @@ class MCMCACHRSampler(HRSampler):
         # mix in the original warmup points to not get stuck
         delta = self.warmup[pi, ] - self.center
         self.prev = step(self, self.prev, delta)
-        if self.problem.homogeneous and (self.n_samples *
-                                         self.thinning % self.nproj == 0):
-            self.prev = self._reproject(self.prev)
-            if not lockCenter:
-                self.center = self._reproject(self.center)
+        #if self.problem.homogeneous and (self.n_samples *
+                                         #self.thinning % self.nproj == 0):
+            #self.prev = self._reproject(self.prev)
+            #if not lockCenter:
+                #self.center = self._reproject(self.center)
         if not lockCenter:
             self.center = ((self.n_samples * self.center) / (self.n_samples + 1) +
                            self.prev / (self.n_samples + 1))
