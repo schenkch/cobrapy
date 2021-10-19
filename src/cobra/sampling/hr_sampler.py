@@ -533,6 +533,7 @@ class HRSampler(object):
             bounds = np.array([r.bounds for r in self.model.reactions]).T
         elif samples.shape[1] == len(self.model.variables):
             S = prob.equalities
+            print(S)
             b = prob.b
             bounds = prob.variable_bounds
         else:
