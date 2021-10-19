@@ -182,7 +182,7 @@ def constraint_matrices(model, array_type="dense", include_vars=False, zero_tol=
     inequality_rows = []
     inequality_bounds = []
     b = []
-
+    print(model.constraints)
     for const in model.constraints:
         lb = -np.inf if const.lb is None else const.lb
         ub = np.inf if const.ub is None else const.ub
