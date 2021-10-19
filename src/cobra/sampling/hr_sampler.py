@@ -210,6 +210,7 @@ class HRSampler(object):
         """Build the matrix representation of the sampling problem."""
 
         # Set up the mathematical problem
+        print(self.model)
         prob = constraint_matrices(self.model, zero_tol=self.feasibility_tol)
 
         # check if there any non-zero equality constraints
