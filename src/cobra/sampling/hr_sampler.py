@@ -542,6 +542,8 @@ class HRSampler(object):
                 "column for each flux or variable defined in the "
                 "model!"
             )
+        print('S', S)
+        print('model', self.model)
 
         feasibility = np.abs(S.dot(samples.T).T - b).max(axis=1)
         lb_error = (samples - bounds[0,]).min(axis=1)
