@@ -134,7 +134,6 @@ class MCMCACHRSampler(HRSampler):
             self.center = ((self.n_samples * self.center) / (self.n_samples + 1) +
                            self.prev / (self.n_samples + 1))
         self.n_samples += 1
-        #display('center', self.center)
 
     def sample(self, n, fluxes=True, likelihood=None, prior=None):
         """Generate a set of samples.
@@ -192,9 +191,7 @@ class MCMCACHRSampler(HRSampler):
         # determine if we are doing centering samples, or MCMC samples
         # with a locked center
         if prior or likelihood:
-            display('center', self.center, 'likelihood center', likelihood(self.center), 'likelihood prev', likelihood(self.prev))
             lockCenter = True
-            #self.center = self.prev#added!
         else:
             lockCenter = False
 
@@ -205,26 +202,19 @@ class MCMCACHRSampler(HRSampler):
             if lockCenter:
                 if likelihood:
                     newLikelihood = likelihood(self.prev)
-                    #print('newLikelihood', newLikelihood)
                 else:
                     newLikelihood = 0
                 if prior:
                     newPrior = prior(self.prev)
-                    #print('newPrior', newPrior)
                 else:
                     newPrior = 0
                 newPosterior = newLikelihood + newPrior
-                acceptProbability = newPosterior-previousPosterior
-                #euclideandist = np.linalg.norm(newPosterior - previousPosterior)
-                #if euclideandist<=0:
-                #print('Euclidean Distance between Samples', euclideandist)
-                #if acceptProbability<=0:
-                #    print('acceptProbabililty is less than 0', acceptProbability)
+                acceptProbability = newPosterior - previousPosterior
                 if not previousPosterior:
                     # always accept on first iteration
                     previousPosterior = newPosterior
                     savePrev = self.prev
-                elif np.random.rand() < np.exp(acceptProbability):#changed to <= CS
+                elif np.log(np.random.rand()) < acceptProbability:
                     # then accept if probability is high enough
                     previousPosterior = newPosterior
                     savePrev = self.prev
@@ -237,15 +227,11 @@ class MCMCACHRSampler(HRSampler):
                     # reject (keep previous state)
                     self.prev = savePrev
                     rejections += 1
-                if i==self.thinning*n:
-                    print('Last Likelihood', likelihood(self.prev))
 
             if i % self.thinning == 0:
                 samples[i // self.thinning - 1, :] = self.prev
 
         print('acceptance rate: ' + str(float(totalSamples - rejections) / float(totalSamples)))
-        if float(totalSamples - rejections) / float(totalSamples)<0 or float(totalSamples - rejections) / float(totalSamples)>1:
-            print('acceptance rate not between 0 and 1')
 
         if fluxes:
             names = [r.id for r in self.model.reactions]
