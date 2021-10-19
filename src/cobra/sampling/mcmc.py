@@ -224,7 +224,7 @@ class MCMCACHRSampler(HRSampler):
                     # always accept on first iteration
                     previousPosterior = newPosterior
                     savePrev = self.prev
-                elif np.random.rand() < np.exp(acceptProbability):#changed to <= CS and removed log, added exp! before: np.log(np.random.rand()) < acceptProbability:#
+                elif np.log(np.random.rand()) < acceptProbability:#np.random.rand() < np.exp(acceptProbability):#changed to <= CS and removed log, added exp!
                     # then accept if probability is high enough
                     previousPosterior = newPosterior
                     savePrev = self.prev
