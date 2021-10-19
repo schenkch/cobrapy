@@ -178,7 +178,7 @@ class HRSampler(object):
         self.thinning = thinning
 
         if nproj is None:
-            if sampler != MCMCACHRSampler:
+            if self != MCMCACHRSampler:
                 self.nproj = int(min(len(self.model.variables) ** 3, 1e6))
         else:
             self.nproj = nproj
