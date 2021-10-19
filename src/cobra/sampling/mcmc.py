@@ -224,7 +224,7 @@ class MCMCACHRSampler(HRSampler):
                     # always accept on first iteration
                     previousPosterior = newPosterior
                     savePrev = self.prev
-                elif np.random.rand() < np.exp(acceptProbability):#changed to <= CS
+                elif np.log(np.random.rand()) < acceptProbability:#np.random.rand() < np.exp(acceptProbability):#changed to <= CS and removed log, added exp!
                     # then accept if probability is high enough
                     previousPosterior = newPosterior
                     savePrev = self.prev
@@ -237,6 +237,7 @@ class MCMCACHRSampler(HRSampler):
                     # reject (keep previous state)
                     self.prev = savePrev
                     rejections += 1
+
                 if i==self.thinning*n:
                     print('Last Likelihood', likelihood(self.prev))
 
@@ -244,6 +245,7 @@ class MCMCACHRSampler(HRSampler):
                 samples[i // self.thinning - 1, :] = self.prev
 
         print('acceptance rate: ' + str(float(totalSamples - rejections) / float(totalSamples)))
+
         if float(totalSamples - rejections) / float(totalSamples)<0 or float(totalSamples - rejections) / float(totalSamples)>1:
             print('acceptance rate not between 0 and 1')
 
