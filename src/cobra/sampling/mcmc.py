@@ -9,6 +9,8 @@ import pandas
 
 from cobra.sampling.hr_sampler import HRSampler, step
 
+import sys
+
 
 class MCMCACHRSampler(HRSampler):
     """MCMC Artificial Centering Hit-and-Run sampler.
@@ -143,14 +145,14 @@ class MCMCACHRSampler(HRSampler):
             #print(self.validate(np.transpose(self.testprev)))
             #print(type(self.validate(self.testprev)))
             while counter<=nmax and np.any(self.validate(np.transpose(self.testprev))!='v'): #input have to be netsamples and in form samples x reactions
-                self.prev = savePrev
-                self.prev = step(self, self.prev, delta)
-                print('searching new valid sample')
-                test = self.prev.copy()
-                self.testprev = np.subtract(test[0::2], test[1::2])
                 if counter==nmax:
                     print('Tried to find valid sample', nmax, 'times without success')
-                    break
+                    sys.exit()
+                print('searching new valid sample')
+                self.prev = savePrev
+                self.prev = step(self, self.prev, delta)
+                test = self.prev.copy()
+                self.testprev = np.subtract(test[0::2], test[1::2])
                 counter += 1
         ###########################
 
