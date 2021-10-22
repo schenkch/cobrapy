@@ -138,6 +138,7 @@ class MCMCACHRSampler(HRSampler):
                     if validate(self, test, feas_tol=None, bounds_tol=None)!=v:
                         self.prev = savePrev
                         self.prev = step(self, self.prev, delta)
+                        print('searching new valid sample')
                         counter += 1
                     else:
                         continue
