@@ -140,11 +140,11 @@ class MCMCACHRSampler(HRSampler):
                 self.prev = savePrev
                 self.prev = step(self, self.prev, delta)
                 print('searching new valid sample')
-                counter += 1
                 self.testprev = self.prev.copy()
                 if counter==nmax:
                     print('Tried to find valid sample', nmax, 'times without success')
                     break
+                counter += 1
         ###########################
 
         if self.problem.homogeneous and (self.n_samples *
