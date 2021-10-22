@@ -137,7 +137,7 @@ class MCMCACHRSampler(HRSampler):
             counter = 0
             self.testprev = self.prev.copy()#numpy.ndarray
             print(self.testprev.shape)
-            #print(self.validate(self.testprev))
+            print(self.validate(np.transpose(self.testprev)))
             #print(type(self.validate(self.testprev)))
             #while counter<=nmax and np.any(self.validate(self.testprev)!='v'):
                 #self.prev = savePrev
