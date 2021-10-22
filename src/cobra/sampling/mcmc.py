@@ -212,6 +212,9 @@ class MCMCACHRSampler(HRSampler):
         totalSamples = 0
         rejections = 0
 
+        if validatecheck:
+            validatecheck=True
+
         # determine if we are doing centering samples, or MCMC samples
         # with a locked center
         if prior or likelihood:
