@@ -8,7 +8,6 @@ import numpy as np
 import pandas
 
 from cobra.sampling.hr_sampler import HRSampler, step
-from cobra.sampling.hr_sampler.HRSampler import validate
 
 
 class MCMCACHRSampler(HRSampler):
@@ -136,7 +135,7 @@ class MCMCACHRSampler(HRSampler):
             while counter<=nmax:
                 try:
                     test = self.prev.copy()
-                    if validate(self, test, feas_tol=None, bounds_tol=None)!=v:
+                    if self.validate(self, test, feas_tol=None, bounds_tol=None)!=v:
                         self.prev = savePrev
                         self.prev = step(self, self.prev, delta)
                         print('searching new valid sample')
