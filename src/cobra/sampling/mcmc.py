@@ -135,15 +135,14 @@ class MCMCACHRSampler(HRSampler):
         #optional validation:
         if validatecheck:
             counter = 0
-            while counter<=nmax:
-                try:
-                    self.testprev = self.prev.copy()
-                    if self.validate(self.testprev)!='v':
-                        self.prev = savePrev
-                        self.prev = step(self, self.prev, delta)
-                        print('searching new valid sample')
-                        counter += 1
-                except counter==nmax:
+            self.testprev = self.prev.copy()
+            while counter<=nmax and self.validate(self.testprev)!='v':
+                self.prev = savePrev
+                self.prev = step(self, self.prev, delta)
+                print('searching new valid sample')
+                counter += 1
+                self.testprev = self.prev.copy()
+                if counter==nmax:
                     print('Tried to find valid sample', nmax, 'times without success')
                     break
         ###########################
