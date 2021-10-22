@@ -147,7 +147,7 @@ class MCMCACHRSampler(HRSampler):
                         continue
                 except counter==nmax:
                     print('Tried to find valid sample', nmax, 'times without success')
-                    sys.exit()
+                    break
         ###########################
 
         if self.problem.homogeneous and (self.n_samples *
