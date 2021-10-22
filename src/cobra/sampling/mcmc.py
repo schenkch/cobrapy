@@ -117,7 +117,7 @@ class MCMCACHRSampler(HRSampler):
         # create a variable to store the best point we sampled
         self.bestSample = None
 
-    def __single_iteration(self, lockCenter=False):
+    def __single_iteration(self, lockCenter=False, validatecheck=False):
         """If lockCenter, do not update the center."""
 
         nmax = 10 #tries to find new valid sample maximum 10 times for each situation
@@ -220,7 +220,7 @@ class MCMCACHRSampler(HRSampler):
             lockCenter = False
 
         for i in range(1, self.thinning * n + 1):
-            self.__single_iteration(lockCenter=lockCenter)
+            self.__single_iteration(lockCenter=lockCenter, validatecheck=validatecheck)
 
             totalSamples += 1
             if lockCenter:
