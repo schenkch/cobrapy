@@ -141,15 +141,15 @@ class MCMCACHRSampler(HRSampler):
             print(self.testprev.shape)
             print(self.validate(np.transpose(self.testprev)))
             #print(type(self.validate(self.testprev)))
-            #while counter<=nmax and np.any(self.validate(self.testprev)!='v'):
-                #self.prev = savePrev
-                #self.prev = step(self, self.prev, delta)
-                #print('searching new valid sample')
-                #self.testprev = self.prev.copy()
-                #if counter==nmax:
-                    #print('Tried to find valid sample', nmax, 'times without success')
-                    #break
-                #counter += 1
+            while counter<=nmax and np.any(self.validate(np.transpose(self.testprev))!='v'):
+                self.prev = savePrev
+                self.prev = step(self, self.prev, delta)
+                print('searching new valid sample')
+                test = self.prev.copy()
+                if counter==nmax:
+                    print('Tried to find valid sample', nmax, 'times without success')
+                    break
+                counter += 1
         ###########################
 
         if self.problem.homogeneous and (self.n_samples *
