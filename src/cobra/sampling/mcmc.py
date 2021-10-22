@@ -120,11 +120,32 @@ class MCMCACHRSampler(HRSampler):
     def __single_iteration(self, lockCenter=False):
         """If lockCenter, do not update the center."""
 
+        nmax = 10 #tries to find new valid sample maximum 10 times for each situation
+
         pi = np.random.randint(self.n_warmup)
 
         # mix in the original warmup points to not get stuck
         delta = self.warmup[pi, ] - self.center
         self.prev = step(self, self.prev, delta)
+
+        ###########################
+        #optional validation:
+        if validatecheck=True:
+            counter = 0
+            while counter<=nmax:
+                try:
+                    test = self.prev.copy()
+                    if validate(self, test, feas_tol=None, bounds_tol=None)!=v:
+                        self.prev = savePrev
+                        self.prev = step(self, self.prev, delta)
+                        counter += 1
+                    else:
+                        continue
+                except counter==nmax:
+                    print('Tried to find valid sample', nmax, 'times without success')
+                    sys.exit()
+        ###########################
+
         if self.problem.homogeneous and (self.n_samples *
                                          self.thinning % self.nproj == 0):
             self.prev = self._reproject(self.prev)
@@ -135,7 +156,7 @@ class MCMCACHRSampler(HRSampler):
                            self.prev / (self.n_samples + 1))
         self.n_samples += 1
 
-    def sample(self, n, fluxes=True, likelihood=None, prior=None):
+    def sample(self, n, fluxes=True, likelihood=None, prior=None, validatecheck=False):
         """Generate a set of samples.
 
         This is the basic sampling function for all hit-and-run samplers,
@@ -168,6 +189,9 @@ class MCMCACHRSampler(HRSampler):
             and not be updated. If the default (None) is used for both
             the prior and likelihood options, normal ACHR sampling will take
             place, with updates to the center on each sample.
+        validatecheck : boolean
+            Checking if current sample is valid or not. If it is True goes back
+            to previous sample and finds a new valid sample (repeated for up to nmax=10 times).
 
         Returns
         -------
