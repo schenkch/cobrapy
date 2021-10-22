@@ -117,6 +117,9 @@ class MCMCACHRSampler(HRSampler):
         # create a variable to store the best point we sampled
         self.bestSample = None
 
+        # create a variable to test if current sample is valid
+        self.testprev = None
+
     def __single_iteration(self, lockCenter=False, validatecheck=False):
         """If lockCenter, do not update the center."""
 
@@ -134,8 +137,8 @@ class MCMCACHRSampler(HRSampler):
             counter = 0
             while counter<=nmax:
                 try:
-                    test = self.prev.copy()
-                    if self.validate(test)!=v:
+                    self.testprev = self.prev.copy()
+                    if self.validate(self.testprev)!=v:
                         self.prev = savePrev
                         self.prev = step(self, self.prev, delta)
                         print('searching new valid sample')
