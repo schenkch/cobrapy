@@ -136,7 +136,8 @@ class MCMCACHRSampler(HRSampler):
         if validatecheck:
             counter = 0
             self.testprev = self.prev.copy()
-            print(self.testprev.shape())
+            print(self.testprev.type)
+            print(self.testprev.shape)
             #print(self.validate(self.testprev))
             #print(type(self.validate(self.testprev)))
             #while counter<=nmax and np.any(self.validate(self.testprev)!='v'):
