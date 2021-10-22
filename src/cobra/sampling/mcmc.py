@@ -143,8 +143,6 @@ class MCMCACHRSampler(HRSampler):
                         self.prev = step(self, self.prev, delta)
                         print('searching new valid sample')
                         counter += 1
-                    else:
-                        continue
                 except counter==nmax:
                     print('Tried to find valid sample', nmax, 'times without success')
                     break
