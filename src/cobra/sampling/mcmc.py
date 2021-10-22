@@ -7,7 +7,8 @@ from __future__ import absolute_import, division
 import numpy as np
 import pandas
 
-from cobra.sampling.hr_sampler import HRSampler, step, validate
+from cobra.sampling.hr_sampler import HRSampler, step
+from cobra.sampling.hr_sampler.HRSampler import validate
 
 
 class MCMCACHRSampler(HRSampler):
