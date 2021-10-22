@@ -130,7 +130,7 @@ class MCMCACHRSampler(HRSampler):
 
         ###########################
         #optional validation:
-        if validatecheck=True:
+        if validatecheck:
             counter = 0
             while counter<=nmax:
                 try:
@@ -211,9 +211,6 @@ class MCMCACHRSampler(HRSampler):
         savePrev = False
         totalSamples = 0
         rejections = 0
-
-        if validatecheck:
-            validatecheck=True
 
         # determine if we are doing centering samples, or MCMC samples
         # with a locked center
