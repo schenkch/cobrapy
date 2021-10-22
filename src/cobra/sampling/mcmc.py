@@ -135,7 +135,9 @@ class MCMCACHRSampler(HRSampler):
         #optional validation:
         if validatecheck:
             counter = 0
-            self.testprev = self.prev.copy()#numpy.ndarray
+            test = self.prev.copy()#numpy.ndarray
+            self.testprev = np.subtract(test[0::1,0::2], test[0::1,1::2])
+            print(self.testprev)
             print(self.testprev.shape)
             print(self.validate(np.transpose(self.testprev)))
             #print(type(self.validate(self.testprev)))
