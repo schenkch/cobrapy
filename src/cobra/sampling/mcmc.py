@@ -142,7 +142,7 @@ class MCMCACHRSampler(HRSampler):
             print('current sample', self.testprev)
             #print('validatecheck in progress')
             #print(self.testprev)
-            print(self.testprev.shape)
+            print(np.transpose(self.testprev.shape))
             print('check sample:', self.validate(np.transpose(self.testprev)))
             #print(type(self.validate(self.testprev)))
             if 'v' in str(self.validate(np.transpose(self.testprev))):
