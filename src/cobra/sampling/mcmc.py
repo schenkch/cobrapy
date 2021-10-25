@@ -144,7 +144,7 @@ class MCMCACHRSampler(HRSampler):
             #print(self.testprev)
             #print(np.transpose(self.testprev.shape))
             #print('check sample:', self.validate(np.transpose(self.testprev)))
-            #print(type(self.validate(self.testprev)))
+            print(self.validate(np.transpose(self.testprev), feas_tol=1e-7, bounds_tol=1e-7))
             #if 'v' in str(self.validate(np.transpose(self.testprev))):
             #    print('valid')
             while counter<=nmax and 'v' not in str(self.validate(np.transpose(self.testprev), feas_tol=1e-7, bounds_tol=1e-7)): #input have to be netsamples and in form samples x reactions
