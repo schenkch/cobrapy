@@ -512,6 +512,8 @@ class HRSampler(object):
         if feas_tol is not None:
             self.val_feasibility_tol = feas_tol  # if user provided set to user tolerance
             print('Different feasibility tolerance for validate function was provided, i.e.', feas_tol)
+        elif feas_tol==1e-7:
+            self.val_feasibility_tol = feas_tol
         else:
             self.val_feasibility_tol = 1e-6  # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.feasibility_tol)
 
@@ -519,6 +521,8 @@ class HRSampler(object):
         if bounds_tol is not None:
             self.val_bounds_tol = bounds_tol  # if user provided set to user tolerance
             print('Different bounds tolerance for validate function was provided, i.e.', bounds_tol)
+        elif bounds_tol==1e-7:
+            self.val_bounds_tol = bounds_tol
         else:
             self.val_bounds_tol = 1e-6 # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.bounds_tol)
 
