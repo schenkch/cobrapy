@@ -142,9 +142,9 @@ class MCMCACHRSampler(HRSampler):
             #print('validatecheck in progress')
             #print(self.testprev)
             #print(self.testprev.shape)
-            #print(self.validate(np.transpose(self.testprev)))
+            print(self.validate(np.transpose(self.testprev)))
             #print(type(self.validate(self.testprev)))
-            while counter<=nmax and np.any(self.validate(np.transpose(self.testprev))!='v'): #input have to be netsamples and in form samples x reactions
+            while counter<=nmax and self.validate(np.transpose(self.testprev))!='v': #input have to be netsamples and in form samples x reactions
                 if counter==nmax:
                     print('Tried to find valid sample', nmax, 'times without success')
                     sys.exit()
