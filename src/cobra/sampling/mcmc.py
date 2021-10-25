@@ -220,7 +220,7 @@ class MCMCACHRSampler(HRSampler):
         samples = np.zeros((n, self.warmup.shape[1]))
 
         # store the log posterior of the previous sample
-        previousPosterior = False
+        previousPosterior = None
         savePrev = None
         totalSamples = 0
         rejections = 0
