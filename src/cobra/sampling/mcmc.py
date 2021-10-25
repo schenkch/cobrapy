@@ -139,9 +139,10 @@ class MCMCACHRSampler(HRSampler):
             counter = 0
             test = self.prev.copy()#numpy.ndarray
             self.testprev = np.subtract(test[0::2], test[1::2])
+            print('current sample', self.testprev)
             #print('validatecheck in progress')
             #print(self.testprev)
-            #print(self.testprev.shape)
+            print(self.testprev.shape)
             print('check sample:', self.validate(np.transpose(self.testprev)))
             #print(type(self.validate(self.testprev)))
             if 'v' in str(self.validate(np.transpose(self.testprev))):
