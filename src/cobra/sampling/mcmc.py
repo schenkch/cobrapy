@@ -221,7 +221,7 @@ class MCMCACHRSampler(HRSampler):
 
         # store the log posterior of the previous sample
         previousPosterior = False#None
-        savePrev = False#None
+        savePrev = np.empty(len(self.prev))# False#None
         totalSamples = 0
         rejections = 0
 
