@@ -135,7 +135,8 @@ class MCMCACHRSampler(HRSampler):
 
         ###########################
         #optional validation:
-        display(savePrev)
+        if validatecheck:
+            display(savePrev)
         if validatecheck and np.all(savePrev)!=False:
             counter = 0
             test = self.prev.copy()#numpy.ndarray
