@@ -571,7 +571,7 @@ class HRSampler(object):
         codes[feasibility > self.val_feasibility_tol] = np.char.add(
             codes[feasibility > self.val_feasibility_tol], "e"
         )
-
+        print(type(codes), codes)
         return codes
 
 
