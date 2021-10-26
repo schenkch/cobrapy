@@ -134,8 +134,8 @@ class MCMCACHRSampler(HRSampler):
         self.prev = step(self, self.prev, delta)
 
         ###########################
-        #optional validation:
-        if validatecheck and savePrev!=False:
+        #optional validation for posterior samples:
+        if validatecheck and np.any(savePrev)!=False:
             counter = 0
             test = self.prev.copy()#numpy.ndarray
             self.testprev = np.subtract(test[0::2], test[1::2])
