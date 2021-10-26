@@ -122,7 +122,7 @@ class MCMCACHRSampler(HRSampler):
         # create a variable to test if current sample is valid
         self.testprev = None
 
-    def __single_iteration(self, lockCenter=False, validatecheck=False, savePrev=np.empty(len(self.prev))):
+    def __single_iteration(self, lockCenter=False, validatecheck=False, savePrev=None):
         """If lockCenter, do not update the center."""
 
         nmax = 3 #tries to find new valid sample maximum 10 times for each situation
@@ -224,7 +224,7 @@ class MCMCACHRSampler(HRSampler):
 
         # store the log posterior of the previous sample
         previousPosterior = False#None
-        savePrev = np.empty(len(self.prev))# False#None
+        savePrev = None#np.empty(len(self.prev))# False#None
         totalSamples = 0
         rejections = 0
 
