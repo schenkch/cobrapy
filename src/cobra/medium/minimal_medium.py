@@ -82,7 +82,7 @@ def add_mip_obj(model):
     model.objective.direction = "min"
 
 
-def _as_medium(exchanges, tolerance=1e-7, exports=False):
+def _as_medium(exchanges, tolerance=1e-6, exports=False):
     """Convert a solution to medium.
 
     Arguments
