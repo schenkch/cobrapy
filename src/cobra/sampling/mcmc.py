@@ -155,7 +155,10 @@ class MCMCACHRSampler(HRSampler):
                         sys.exit()
                     print('searching new valid sample as validate output=', self.validate(np.transpose(self.testprev)))#, feas_tol=1e-6, bounds_tol=1e-6))
                     self.prev = savePrev
+                    display('1 pi', pi)
                     pi = np.random.randint(self.n_warmup)
+                    display('number of warmup samples', self.n_warmup)
+                    display('2 pi', pi)
                     delta = self.warmup[pi, ] - self.center
                     self.prev = step(self, self.prev, delta)
                     test = self.prev.copy()
