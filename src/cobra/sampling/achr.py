@@ -94,7 +94,7 @@ class ACHRSampler(HRSampler):
     def __init__(self, model, thinning=100, nproj=None, seed=None):
         """Initialize a new ACHRSampler."""
         super(ACHRSampler, self).__init__(model, thinning, nproj=nproj, seed=seed)
-        self.generate_fva_warmup(includeReversible=True)
+        self.generate_fva_warmup()
         self.prev = self.center = self.warmup.mean(axis=0)
         np.random.seed(self._seed)
 
