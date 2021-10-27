@@ -274,8 +274,8 @@ class HRSampler(object):
         if includeReversible:
             # make warmup matrix big enough to include reversible reactions
             print('sum',sum([r.reversibility for r in reactions]))
-            print('len', len([r.reversibility for r in reactions]))
-            warmupPoints = 2 * (len(reactions) + len([r.reversibility for r in reactions]))
+            print('len', len([r.reversibility for r in reactions])
+            warmupPoints = 2 * (len(reactions) + sum([r.reversibility for r in reactions]))
         else:
             warmupPoints = 2 * len(reactions)
         self.warmup = np.zeros((warmupPoints, len(self.model.variables)))
@@ -320,6 +320,10 @@ class HRSampler(object):
                 # flux by maximizing both the forward and reverse directions
                 # of the same reaction.
                 if includeReversible and r.reversibility:
+                    # Omit fixed reactions if they are non-homogeneous
+                    if r.upper_bound - r.lower_bound < self.bounds_tol:
+                        LOGGER.info("skipping fixed reaction %s" % r.id)
+                        continue
 
                     # both coefficients are positive to maximize
                     # circulation within this reaction
