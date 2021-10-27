@@ -110,7 +110,7 @@ class MCMCACHRSampler(HRSampler):
         """Initialize a new MCMCACHRSampler."""
 
         super(MCMCACHRSampler, self).__init__(model, thinning, nproj=nproj, seed=seed)
-        self.generate_fva_warmup(includeReversible=True)
+        self.generate_fva_warmup()#includeReversible=True)
         self.prev = self.center = self.warmup.mean(axis=0)
         np.random.seed(self._seed)
 
