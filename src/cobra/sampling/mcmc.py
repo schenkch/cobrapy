@@ -157,7 +157,7 @@ class MCMCACHRSampler(HRSampler):
                     self.prev = savePrev
                     display('1 pi', pi)
                     pi = np.random.randint(self.n_warmup)
-                    display('number of warmup samples', self.n_warmup)
+                    display('number of warmup samples', self.warmup.shape[0], self.n_warmup)
                     display('2 pi', pi)
                     delta = self.warmup[pi, ] - self.center
                     self.prev = step(self, self.prev, delta)
