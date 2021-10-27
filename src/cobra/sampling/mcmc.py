@@ -137,7 +137,7 @@ class MCMCACHRSampler(HRSampler):
         #optional validation for posterior samples:
         if validatecheck and np.any(savePrev)!=None:
             counter = 0
-            test = self.prev.copy()#numpy.ndarray
+            test = self.prev#numpy.ndarray
             self.testprev = np.subtract(test[0::2], test[1::2])
             #print('current sample', self.testprev)
             #print('validatecheck in progress')
@@ -148,24 +148,21 @@ class MCMCACHRSampler(HRSampler):
             #if 'v' in str(self.validate(np.transpose(self.testprev))):
             #if any(element in 'v' for element in self.validate(np.transpose(self.testprev))):
                 #print('valid:', self.validate(np.transpose(self.testprev)))
-            while counter<=nmax:
-                if not any(element in 'v' for element in self.validate(np.transpose(self.testprev))):#first sample: #input have to be netsamples and in form samples x reactions#, feas_tol=1e-6, bounds_tol=1e-6)
-                    if counter==nmax:
-                        print('Tried to find valid sample', nmax, 'times without success')
-                        sys.exit()
-                    print('searching new valid sample as validate output=', self.validate(np.transpose(self.testprev)))#, feas_tol=1e-6, bounds_tol=1e-6))
-                    self.prev = savePrev
-                    display('1 pi', pi)
-                    pi = np.random.randint(self.n_warmup)
-                    display('number of warmup samples', self.warmup.shape[0], self.n_warmup)
-                    display('2 pi', pi)
-                    delta = self.warmup[pi, ] - self.center
-                    self.prev = step(self, self.prev, delta)
-                    test = self.prev.copy()
-                    self.testprev = np.subtract(test[0::2], test[1::2])
-                    counter += 1
-                else:
-                    break
+            while counter<=nmax and not any(element in 'v' for element in self.validate(np.transpose(self.testprev))):#first sample: #input have to be netsamples and in form samples x reactions#, feas_tol=1e-6, bounds_tol=1e-6)
+                if counter==nmax:
+                    print('Tried to find valid sample', nmax, 'times without success')
+                    sys.exit()
+                print('searching new valid sample as validate output=', self.validate(np.transpose(self.testprev)))#, feas_tol=1e-6, bounds_tol=1e-6))
+                self.prev = savePrev
+                display('1 pi', pi)
+                pi = np.random.randint(self.n_warmup)
+                display('number of warmup samples', self.warmup.shape[0], self.n_warmup)
+                display('2 pi', pi)
+                delta = self.warmup[pi, ] - self.center
+                self.prev = step(self, self.prev, delta)
+                test = self.prev
+                self.testprev = np.subtract(test[0::2], test[1::2])
+                counter += 1
         ###########################
 
         if self.problem.homogeneous and (self.n_samples *
