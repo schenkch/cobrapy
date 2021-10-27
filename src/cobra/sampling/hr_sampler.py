@@ -515,7 +515,7 @@ class HRSampler(object):
         #elif feas_tol==1e-7:
             #self.val_feasibility_tol = feas_tol
         #else:
-            #self.val_feasibility_tol = 1e-6  # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.feasibility_tol)
+        self.val_feasibility_tol = 1e-7  # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.feasibility_tol)
 
         ## introduce new parameter bounds_tol for inequality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
         #if bounds_tol is not None and bounds_tol!=1e-7:
@@ -524,7 +524,7 @@ class HRSampler(object):
         #elif bounds_tol==1e-7:
             #self.val_bounds_tol = bounds_tol
         #else:
-            #self.val_bounds_tol = 1e-6 # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.bounds_tol)
+        self.val_bounds_tol = 1e-7 # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.bounds_tol)
 
         samples = np.atleast_2d(samples)
         prob = self.problem
