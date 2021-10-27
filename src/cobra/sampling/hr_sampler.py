@@ -274,7 +274,7 @@ class HRSampler(object):
         if includeReversible:
             # make warmup matrix big enough to include reversible reactions
             print('sum',sum([r.reversibility for r in reactions]))
-            print('len', len([r.reversibility for r in reactions])
+            print('len', len([r.reversibility for r in reactions]))
             warmupPoints = 2 * (len(reactions) + sum([r.reversibility for r in reactions]))
         else:
             warmupPoints = 2 * len(reactions)
