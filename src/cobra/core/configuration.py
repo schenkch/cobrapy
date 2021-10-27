@@ -52,7 +52,7 @@ class BaseConfiguration(object):
 
     def __init__(self):
         self._solver = None
-        self.tolerance = 1e-07
+        self.tolerance = 1e-06
         self.lower_bound = None
         self.upper_bound = None
 
