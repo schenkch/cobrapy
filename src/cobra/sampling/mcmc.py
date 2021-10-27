@@ -9,8 +9,6 @@ import pandas
 
 from cobra.sampling.hr_sampler import HRSampler, step
 
-import sys
-
 
 class MCMCACHRSampler(HRSampler):
     """MCMC Artificial Centering Hit-and-Run sampler.
@@ -119,52 +117,14 @@ class MCMCACHRSampler(HRSampler):
         # create a variable to store the best point we sampled
         self.bestSample = None
 
-        # create a variable to test if current sample is valid
-        self.testprev = None
-
-    def __single_iteration(self, lockCenter=False, validatecheck=False, savePrev=None):
+    def __single_iteration(self, lockCenter=False):
         """If lockCenter, do not update the center."""
-
-        nmax = 20 #tries to find new valid sample maximum 10 times for each situation
 
         pi = np.random.randint(self.n_warmup)
 
         # mix in the original warmup points to not get stuck
         delta = self.warmup[pi, ] - self.center
         self.prev = step(self, self.prev, delta)
-
-        ###########################
-        #optional validation for posterior samples:
-        if validatecheck and np.any(savePrev)!=None:
-            counter = 0
-            test = self.prev#numpy.ndarray
-            self.testprev = np.subtract(test[0::2], test[1::2])
-            #print('current sample', self.testprev)
-            #print('validatecheck in progress')
-            #print(self.testprev)
-            #print(np.transpose(self.testprev.shape))
-            #print('check sample:', self.validate(np.transpose(self.testprev)))
-            #print(self.validate(np.transpose(self.testprev), feas_tol=1e-6, bounds_tol=1e-6))
-            #if 'v' in str(self.validate(np.transpose(self.testprev))):
-            #if any(element in 'v' for element in self.validate(np.transpose(self.testprev))):
-                #print('valid:', self.validate(np.transpose(self.testprev)))
-            while counter<=nmax and not any(element in 'v' for element in self.validate(np.transpose(self.testprev))):#first sample: #input have to be netsamples and in form samples x reactions#, feas_tol=1e-6, bounds_tol=1e-6)
-                if counter==nmax:
-                    print('Tried to find valid sample', nmax, 'times without success')
-                    sys.exit()
-                print('searching new valid sample as validate output=', self.validate(np.transpose(self.testprev)))#, feas_tol=1e-6, bounds_tol=1e-6))
-                self.prev = savePrev
-                display('1 pi', pi)
-                pi = np.random.randint(self.n_warmup)
-                display('number of warmup samples', self.warmup.shape[0], self.n_warmup)
-                display('2 pi', pi)
-                delta = self.warmup[pi, ] - self.center
-                self.prev = step(self, self.prev, delta)
-                test = self.prev
-                self.testprev = np.subtract(test[0::2], test[1::2])
-                counter += 1
-        ###########################
-
         if self.problem.homogeneous and (self.n_samples *
                                          self.thinning % self.nproj == 0):
             self.prev = self._reproject(self.prev)
@@ -175,7 +135,7 @@ class MCMCACHRSampler(HRSampler):
                            self.prev / (self.n_samples + 1))
         self.n_samples += 1
 
-    def sample(self, n, fluxes=True, likelihood=None, prior=None, validatecheck=False):
+    def sample(self, n, fluxes=True, likelihood=None, prior=None):
         """Generate a set of samples.
 
         This is the basic sampling function for all hit-and-run samplers,
@@ -208,9 +168,6 @@ class MCMCACHRSampler(HRSampler):
             and not be updated. If the default (None) is used for both
             the prior and likelihood options, normal ACHR sampling will take
             place, with updates to the center on each sample.
-        validatecheck : boolean
-            Checking if current sample is valid or not. If it is True goes back
-            to previous sample and finds a new valid sample (repeated for up to nmax=10 times).
 
         Returns
         -------
@@ -226,8 +183,8 @@ class MCMCACHRSampler(HRSampler):
         samples = np.zeros((n, self.warmup.shape[1]))
 
         # store the log posterior of the previous sample
-        previousPosterior = False#None
-        savePrev = None#np.empty(len(self.prev))# False#None
+        previousPosterior = False
+        savePrev = False
         totalSamples = 0
         rejections = 0
 
@@ -239,7 +196,7 @@ class MCMCACHRSampler(HRSampler):
             lockCenter = False
 
         for i in range(1, self.thinning * n + 1):
-            self.__single_iteration(lockCenter=lockCenter, validatecheck=validatecheck, savePrev=savePrev)
+            self.__single_iteration(lockCenter=lockCenter)
 
             totalSamples += 1
             if lockCenter:
