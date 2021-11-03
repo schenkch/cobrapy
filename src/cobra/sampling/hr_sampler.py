@@ -320,10 +320,10 @@ class HRSampler(object):
                 # flux by maximizing both the forward and reverse directions
                 # of the same reaction.
                 if includeReversible and r.reversibility:
-                    # Omit fixed reactions if they are non-homogeneous
-                    if r.upper_bound - r.lower_bound < self.bounds_tol:
-                        LOGGER.info("skipping fixed reaction %s" % r.id)
-                        continue
+                    ## Omit fixed reactions if they are non-homogeneous
+                    #if r.upper_bound - r.lower_bound < self.bounds_tol:
+                        #LOGGER.info("skipping fixed reaction %s" % r.id)
+                        #continue
 
                     # both coefficients are positive to maximize
                     # circulation within this reaction
@@ -655,6 +655,9 @@ class HRSampler(object):
         codes[feasibility > self.feasibility_tol] = np.char.add(
             codes[feasibility > self.feasibility_tol], "e"
         )
+        if feasibility < self.feasibility_tol:
+            display(feasibility)
+
 
         return codes
 
