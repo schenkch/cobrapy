@@ -655,7 +655,7 @@ class HRSampler(object):
         codes[feasibility > self.feasibility_tol] = np.char.add(
             codes[feasibility > self.feasibility_tol], "e"
         )
-        if np.any(feasibility) < self.feasibility_tol:
+        if np.any(feasibility) > self.feasibility_tol:
             print('feasibility', feasibility)
 
 
