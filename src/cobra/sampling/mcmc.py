@@ -270,6 +270,9 @@ class MCMCACHRSampler(HRSampler):
                     # reject (keep previous state)
                     self.prev = savePrev
                     rejections += 1
+            #added for using validatecheck on centeringsamples:
+            if validatecheck and lockCenter==False:
+                savePrev = self.prev
 
             if i % self.thinning == 0:
                 samples[i // self.thinning - 1, :] = self.prev
