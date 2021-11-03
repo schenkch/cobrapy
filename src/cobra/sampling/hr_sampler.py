@@ -656,7 +656,7 @@ class HRSampler(object):
             codes[feasibility > self.feasibility_tol], "e"
         )
         if np.any(feasibility) < self.feasibility_tol:
-            display(feasibility)
+            print('feasibility', feasibility)
 
 
         return codes
