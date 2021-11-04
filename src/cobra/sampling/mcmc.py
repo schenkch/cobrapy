@@ -137,8 +137,8 @@ class MCMCACHRSampler(HRSampler):
         #optional validation for posterior samples:
         if validatecheck and np.any(savePrev)!=None:
             counter = 0
-            test = self.prev#numpy.ndarray
-            self.testprev = np.subtract(test[0::2], test[1::2])
+            self.testprev = self.prev#numpy.ndarray
+            #self.testprev = np.subtract(test[0::2], test[1::2])
             #print('current sample', self.testprev)
             #print('validatecheck in progress')
             #print(self.testprev)
@@ -160,8 +160,8 @@ class MCMCACHRSampler(HRSampler):
                 #display('2 pi', pi)
                 delta = self.warmup[pi, ] - self.center
                 self.prev = step(self, self.prev, delta)
-                test = self.prev
-                self.testprev = np.subtract(test[0::2], test[1::2])
+                self.testprev = self.prev
+                #self.testprev = np.subtract(test[0::2], test[1::2])
                 counter += 1
         ###########################
 
