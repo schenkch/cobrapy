@@ -703,6 +703,8 @@ def step(sampler, x, delta, fraction=None, tries=0):
     else:
         alpha = np.random.uniform(alpha_range[0], alpha_range[1])
 
+    print(alpha_range, alpha)
+
     p = x + alpha * delta
 
     # Numerical instabilities may cause bounds invalidation
