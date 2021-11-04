@@ -620,25 +620,29 @@ class HRSampler(object):
 
         print(prob.inequalities.shape[0])
         if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
+            print(consts.shape)
             consts = prob.inequalities.dot(samples.T)
-            lb_error = np.minimum(
-                lb_error,
-                (
-                    consts
-                    - prob.bounds[
-                        0,
-                    ]
-                ).min(axis=1),
-            )
-            ub_error = np.minimum(
-                ub_error,
-                (
-                    prob.bounds[
-                        1,
-                    ]
-                    - consts
-                ).min(axis=1),
-            )
+            if prob.bounds[0, ]:
+                lb_error = np.minimum(
+                    lb_error,
+                    (
+                        consts
+                        - prob.bounds[
+                            0,
+                        ]
+                    ).min(axis=1),
+                )
+            if prob.bounds[1, ]:
+                ub_error = np.minimum(
+                    ub_error,
+                    (
+                        prob.bounds[
+                            1,
+                        ]
+                        - consts
+                    ).min(axis=1),
+                )
+
 
         valid = (
             (feasibility < self.feasibility_tol)
