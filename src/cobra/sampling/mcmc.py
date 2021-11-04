@@ -152,12 +152,12 @@ class MCMCACHRSampler(HRSampler):
                 if counter==nmax:
                     print('Tried to find valid sample', nmax, 'times without success')
                     sys.exit()
-                print('searching new valid sample as validate output=', self.validate(np.transpose(self.testprev)))#, feas_tol=1e-6, bounds_tol=1e-6))
+                #print('searching new valid sample as validate output=', self.validate(np.transpose(self.testprev)))#, feas_tol=1e-6, bounds_tol=1e-6))
                 self.prev = savePrev
-                display('1 pi', pi)
+                #display('1 pi', pi)
                 pi = np.random.randint(self.n_warmup)
-                display('number of warmup samples', self.warmup.shape[0], self.n_warmup)
-                display('2 pi', pi)
+                #display('number of warmup samples', self.warmup.shape[0], self.n_warmup)
+                #display('2 pi', pi)
                 delta = self.warmup[pi, ] - self.center
                 self.prev = step(self, self.prev, delta)
                 test = self.prev
