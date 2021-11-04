@@ -623,7 +623,7 @@ class HRSampler(object):
             consts = prob.inequalities.dot(samples.T)
 
             #added and changed:
-            for i in consts:
+            for i in range(0,len(consts)):
                 if prob.bounds[0, i]!=None or prob.bounds[0, i]!=False:
                     diff0[i] = consts[i] - prob.bounds[0, ]
                 else:
