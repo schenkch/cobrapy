@@ -618,6 +618,7 @@ class HRSampler(object):
             - samples
         ).min(axis=1)
 
+        print(prob.inequalities.shape[0])
         if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
             consts = prob.inequalities.dot(samples.T)
             lb_error = np.minimum(
@@ -703,7 +704,7 @@ def step(sampler, x, delta, fraction=None, tries=0):
     else:
         alpha = np.random.uniform(alpha_range[0], alpha_range[1])
 
-    print(alpha_range, alpha)
+    #print(alpha_range, alpha)
 
     p = x + alpha * delta
 
