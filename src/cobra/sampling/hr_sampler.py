@@ -636,7 +636,7 @@ class HRSampler(object):
                 if prob.bounds[1, i]!=None or prob.bounds[1, i]!=False:
                     diff1[i,:] = prob.bounds[1, i] - consts[i]
                 else:
-                    diff0[i,:] = ub_error[i]
+                    diff1[i,:] = ub_error[i]
 
             lb_error = np.minimum(
                 lb_error,
