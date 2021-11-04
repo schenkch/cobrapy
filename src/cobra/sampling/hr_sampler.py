@@ -625,11 +625,10 @@ class HRSampler(object):
             #added and changed:
             print(prob.bounds[0, ].shape)
             print(consts.shape)
-            for i in range(0,len(consts)):
+            diff0 = np.zeros(consts.shape)
+            for i in range(0,len(prob.bounds[0, ])):
                 if prob.bounds[0, i]!=None or prob.bounds[0, i]!=False:
-                    diff0[i] = consts[i] - prob.bounds[0, i]
-                else:
-                    diff0[i] = 0
+                    diff0[i,:] = consts[i] - prob.bounds[0, i]
 
             lb_error = np.minimum(
                 lb_error,
