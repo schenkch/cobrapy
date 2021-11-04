@@ -620,7 +620,6 @@ class HRSampler(object):
 
         print(prob.inequalities.shape[0])
         if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
-            print(consts.shape)
             consts = prob.inequalities.dot(samples.T)
             if prob.bounds[0, ]:
                 lb_error = np.minimum(
