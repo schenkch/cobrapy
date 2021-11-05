@@ -570,14 +570,15 @@ class HRSampler(object):
             #print('before', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1)))
             #consts = consts.reshape((consts.shape[0],))
             #print(prob.bounds[0,].shape)
-            if prob.bounds[0, ].shape[1] == 1:
-                lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min())
-            else:
+            if prob.bounds[0,].shape[1] > 1:
                 lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1))
-            if prob.bounds[1, ].shape[0] == 1:
-                ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min())
             else:
+                lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min())
+            if prob.bounds[1,].shape[1] > 1:
                 ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1))
+            else:
+                ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min())
+
             #print('after', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=0)))#axis=1))
             #lb_error = lb_error.reshape((lb_error.shape[0],1))
             #ub_error = ub_error.reshape((ub_error.shape[0],1))
