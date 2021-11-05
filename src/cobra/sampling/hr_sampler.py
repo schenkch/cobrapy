@@ -564,9 +564,9 @@ class HRSampler(object):
 
             #Original:
             consts = prob.inequalities.dot(samples.T)
-            print('const', np.type(consts))
-            print(np.type(prob.bounds[0,]))
-            print(np.type(prob.bounds[1,]))
+            print('const', type(consts))
+            print(type(prob.bounds[0,]))
+            print(type(prob.bounds[1,]))
             #print('before', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1)))
             #consts = consts.reshape((consts.shape[0],))
             #print(prob.bounds[0,].shape)
