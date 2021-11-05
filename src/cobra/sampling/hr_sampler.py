@@ -616,10 +616,15 @@ class HRSampler(object):
             codes[ub_error <= -self.val_bounds_tol], "u"
         )
         #print('feas', feasibility.shape)
-        codes[feasibility > self.val_feasibility_tol] = np.char.add(
-            codes[feasibility > self.val_feasibility_tol], "e"
-        )
-
+        try:
+            codes[feasibility > self.val_feasibility_tol] = np.char.add(
+                codes[feasibility > self.val_feasibility_tol], "e"
+            )
+        except IndexError:
+            feasibility=feasibility.max()
+            codes[feasibility > self.val_feasibility_tol] = np.char.add(
+                codes[feasibility > self.val_feasibility_tol], "e"
+            )
         return codes
 
 
