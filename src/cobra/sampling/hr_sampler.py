@@ -568,6 +568,7 @@ class HRSampler(object):
             #print('before', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1)))
             #consts = consts.reshape((consts.shape[0],))
             #print(prob.bounds[0,].shape)
+            print(consts.shape[1])
             lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1))
             ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1))
             #print('after', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=0)))#axis=1))
