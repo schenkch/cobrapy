@@ -120,7 +120,7 @@ class MCMCACHRSampler(HRSampler):
         self.bestSample = None
 
         # create a variable to test if current sample is valid
-        self.testprev = None
+        #self.testprev = None
 
     def __single_iteration(self, lockCenter=False, validatecheck=False, savePrev=None):
         """If lockCenter, do not update the center."""
@@ -131,13 +131,13 @@ class MCMCACHRSampler(HRSampler):
 
         # mix in the original warmup points to not get stuck
         delta = self.warmup[pi, ] - self.center
-        self.prev = step(self, self.prev, delta)
+        testprev = step(self, self.prev, delta)
 
         ###########################
         #optional validation for posterior samples:
         if validatecheck and np.any(savePrev)!=None:
             counter = 0
-            self.testprev = self.prev#numpy.ndarray
+            #self.testprev = self.prev#numpy.ndarray
             #self.testprev = np.subtract(test[0::2], test[1::2])
             #print('current sample', self.testprev)
             #print('validatecheck in progress')
@@ -148,21 +148,21 @@ class MCMCACHRSampler(HRSampler):
             #if 'v' in str(self.validate(np.transpose(self.testprev))):
             #if not any(element in 'v' for element in self.validate(np.transpose(self.testprev))):
                 #print('validcheck at', self.n_samples, 'results in ',  self.validate(np.transpose(self.testprev)))
-            while counter<=nmax and not any(element in 'v' for element in self.validate(np.transpose(self.testprev), feas_tol=1e-6, bounds_tol=1e-6)):#first sample: #input have to be netsamples and in form samples x reactions#, feas_tol=1e-6, bounds_tol=1e-6)
+            while counter<=nmax and not any(element in 'v' for element in self.validate(np.transpose(testprev), feas_tol=1e-6, bounds_tol=1e-6)):#first sample: #input have to be netsamples and in form samples x reactions#, feas_tol=1e-6, bounds_tol=1e-6)
                 if counter==nmax:
                     print('Tried to find valid sample', nmax, 'times without success')
                     sys.exit()
-                #print('searching new valid sample as validate output=', self.validate(np.transpose(self.testprev)))#, feas_tol=1e-6, bounds_tol=1e-6))
-                self.prev = savePrev
+                print('searching new valid sample as validate output=', self.validate(np.transpose(testprev)))#, feas_tol=1e-6, bounds_tol=1e-6))
+                #self.prev = savePrev
                 #display('1 pi', pi)
                 pi = np.random.randint(self.n_warmup)
                 #display('number of warmup samples', self.warmup.shape[0], self.n_warmup)
                 #display('2 pi', pi)
                 delta = self.warmup[pi, ] - self.center
-                self.prev = step(self, self.prev, delta)
-                self.testprev = self.prev
+                testprev = step(self, testprev, delta)
                 #self.testprev = np.subtract(test[0::2], test[1::2])
                 counter += 1
+        self.prev = testprev
         ###########################
 
         if self.problem.homogeneous and (self.n_samples *
@@ -239,8 +239,8 @@ class MCMCACHRSampler(HRSampler):
             lockCenter = False
 
         for i in range(1, self.thinning * n + 1):
-            
-            self.__single_iteration(lockCenter=lockCenter, validatecheck=validatecheck, savePrev=savePrev)
+
+            self.__single_iteration(lockCenter=lockCenter, validatecheck=validatecheck)
 
             totalSamples += 1
             if lockCenter:
@@ -271,9 +271,6 @@ class MCMCACHRSampler(HRSampler):
                     # reject (keep previous state)
                     self.prev = savePrev
                     rejections += 1
-            #added for using validatecheck on centeringsamples:
-            if validatecheck and lockCenter==False:
-                savePrev = self.prev
 
             if i % self.thinning == 0:
                 samples[i // self.thinning - 1, :] = self.prev
