@@ -561,40 +561,42 @@ class HRSampler(object):
         #print(prob.inequalities.shape[0])
         if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
             print(prob.bounds[0, ])
-            consts = prob.inequalities.dot(samples.T)
-
-            #added and changed:
-            #print(prob.bounds[0, ].shape)
-            #print(consts.shape)
-            #print(lb_error.shape)
-            diff0 = np.zeros(consts.shape)
-            diff1 = np.zeros(consts.shape)
-            for i in range(0,len(prob.bounds[0, ])):
-                if prob.bounds[0, i]!=None or prob.bounds[0, i]!=False:
-                    diff0[i,:] = consts[i] - prob.bounds[0, i]
-                else:
-                    diff0[i,:] = lb_error[i]
-                if prob.bounds[1, i]!=None or prob.bounds[1, i]!=False:
-                    diff1[i,:] = prob.bounds[1, i] - consts[i]
-                else:
-                    diff1[i,:] = ub_error[i]
-
-            lb_error = np.minimum(
-                lb_error,
-                (
-                    diff0
-                ).min(axis=0),
-            )
-        #if prob.bounds[1, ]:
-            ub_error = np.minimum(
-                ub_error,
-                (
-                    diff1
-                ).min(axis=0),
-            )
             #consts = prob.inequalities.dot(samples.T)
-            #lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1))
-            #ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1))
+
+            ##added and changed:
+            ##print(prob.bounds[0, ].shape)
+            ##print(consts.shape)
+            ##print(lb_error.shape)
+            #diff0 = np.zeros(consts.shape)
+            #diff1 = np.zeros(consts.shape)
+            #for i in range(0,len(prob.bounds[0, ])):
+                #if prob.bounds[0, i]!=None or prob.bounds[0, i]!=False:
+                    #diff0[i,:] = consts[i] - prob.bounds[0, i]
+                #else:
+                    #diff0[i,:] = lb_error[i]
+                #if prob.bounds[1, i]!=None or prob.bounds[1, i]!=False:
+                    #diff1[i,:] = prob.bounds[1, i] - consts[i]
+                #else:
+                    #diff1[i,:] = ub_error[i]
+
+            #lb_error = np.minimum(
+                #lb_error,
+                #(
+                    #diff0
+                #).min(axis=0),
+            #)
+        ##if prob.bounds[1, ]:
+            #ub_error = np.minimum(
+                #ub_error,
+                #(
+                    #diff1
+                #).min(axis=0),
+            #)
+
+            #Original:
+            consts = prob.inequalities.dot(samples.T)
+            lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1))
+            ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1))
 
         valid = (
             (feasibility < self.val_feasibility_tol)
