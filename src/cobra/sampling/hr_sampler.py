@@ -595,8 +595,8 @@ class HRSampler(object):
 
             #Original:
             consts = prob.inequalities.dot(samples.T)
-            lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=0))
-            ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=0))
+            lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1))
+            ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1))
 
         valid = (
             (feasibility < self.val_feasibility_tol)
@@ -612,7 +612,7 @@ class HRSampler(object):
             codes[ub_error <= -self.val_bounds_tol], "u"
         )
         codes[feasibility > self.val_feasibility_tol] = np.char.add(
-            codes[feasibility > self.val_feasibility_tol], "e"
+            codes[np.any(feasibility) > self.val_feasibility_tol], "e"
         )
 
         return codes
