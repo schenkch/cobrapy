@@ -596,13 +596,13 @@ class HRSampler(object):
 
             #Original:
             consts = prob.inequalities.dot(samples.T)
-            print('const', consts.shape)
-            print('before', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1)))
+            #print('const', consts.shape)
+            #print('before', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1)))
             consts = consts.reshape((consts.shape[0],))
 
-            lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min())#axis=1))
-            ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min())#axis=1))
-            print('after', np.minimum(lb_error, (consts - prob.bounds[0,]).min()))#axis=1))
+            lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=0))#axis=1))
+            ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=0))#axis=1))
+            #print('after', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=0)))#axis=1))
             #lb_error = lb_error.reshape((lb_error.shape[0],1))
             #ub_error = ub_error.reshape((ub_error.shape[0],1))
 
@@ -634,11 +634,11 @@ class HRSampler(object):
         codes[lb_error <= -self.val_bounds_tol] = np.char.add(
             codes[lb_error <= -self.val_bounds_tol], "l"
         )
-        print(ub_error.shape)
+        #print(ub_error.shape)
         codes[ub_error <= -self.val_bounds_tol] = np.char.add(
             codes[ub_error <= -self.val_bounds_tol], "u"
         )
-        print('feas', feasibility.shape)
+        #print('feas', feasibility.shape)
         codes[feasibility > self.val_feasibility_tol] = np.char.add(
             codes[feasibility > self.val_feasibility_tol], "e"
         )
