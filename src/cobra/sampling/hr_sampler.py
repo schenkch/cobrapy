@@ -514,75 +514,23 @@ class HRSampler(object):
 
         """
 
-        ## introduce new parameter feas_tol for equality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
-        #if feas_tol is not None and feas_tol!=1e-7:
-            #self.val_feasibility_tol = feas_tol  # if user provided set to user tolerance
-            #print('Different feasibility tolerance for validate function was provided, i.e.', feas_tol)
-        #elif feas_tol==1e-7:
-            #self.val_feasibility_tol = feas_tol
-        #else:
-            #self.val_feasibility_tol = 1e-6  # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.feasibility_tol)
+        # introduce new parameter feas_tol for equality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
+        if feas_tol is not None and feas_tol!=1e-7:
+            self.val_feasibility_tol = feas_tol  # if user provided set to user tolerance
+            print('Different feasibility tolerance for validate function was provided, i.e.', feas_tol)
+        elif feas_tol==1e-7:
+            self.val_feasibility_tol = feas_tol
+        else:
+            self.val_feasibility_tol = 1e-6  # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.feasibility_tol)
 
-        ## introduce new parameter bounds_tol for inequality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
-        #if bounds_tol is not None and bounds_tol!=1e-7:
-            #self.val_bounds_tol = bounds_tol  # if user provided set to user tolerance
-            #print('Different bounds tolerance for validate function was provided, i.e.', bounds_tol)
-        #elif bounds_tol==1e-7:
-            #self.val_bounds_tol = bounds_tol
-        #else:
-            #self.val_bounds_tol = 1e-6 # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.bounds_tol)
-
-        #samples = np.atleast_2d(samples)
-        #prob = self.problem
-
-        #if samples.shape[1] == len(self.model.reactions):
-            #S = create_stoichiometric_matrix(self.model)
-            #b = np.array(
-                #[self.model.constraints[m.id].lb for m in self.model.metabolites]
-            #)
-            #bounds = np.array([r.bounds for r in self.model.reactions]).T
-        #elif samples.shape[1] == len(self.model.variables):
-            #S = prob.equalities
-            #b = prob.b
-            #bounds = prob.variable_bounds
-        #else:
-            #raise ValueError(
-                #"Wrong number of columns. samples must have a "
-                #"column for each flux or variable defined in the "
-                #"model!"
-            #)
-
-        #feasibility = np.abs(S.dot(samples.T).T - b).max(axis=1)
-        #lb_error = (samples - bounds[0,]).min(axis=1)
-        #ub_error = (bounds[1,] - samples).min(axis=1)
-
-        #if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
-            #consts = prob.inequalities.dot(samples.T)
-            #lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1))
-            #ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1))
-
-        #valid = (
-            #(feasibility < self.val_feasibility_tol)
-            #& (lb_error > -self.val_bounds_tol)
-            #& (ub_error > -self.val_bounds_tol)
-        #)
-        #codes = np.repeat("", valid.shape[0]).astype(np.dtype((str, 3)))
-        #codes[valid] = "v"
-        #codes[lb_error <= -self.val_bounds_tol] = np.char.add(
-            #codes[lb_error <= -self.val_bounds_tol], "l"
-        #)
-        #codes[ub_error <= -self.val_bounds_tol] = np.char.add(
-            #codes[ub_error <= -self.val_bounds_tol], "u"
-        #)
-        #codes[feasibility > self.val_feasibility_tol] = np.char.add(
-            #codes[feasibility > self.val_feasibility_tol], "e"
-        #)
-
-        #return codes
-
-
-        #####################3
-        ####Original##########
+        # introduce new parameter bounds_tol for inequality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
+        if bounds_tol is not None and bounds_tol!=1e-7:
+            self.val_bounds_tol = bounds_tol  # if user provided set to user tolerance
+            print('Different bounds tolerance for validate function was provided, i.e.', bounds_tol)
+        elif bounds_tol==1e-7:
+            self.val_bounds_tol = bounds_tol
+        else:
+            self.val_bounds_tol = 1e-6 # else set to 1e-6 instead of model.tolerance=1e-7 from cobrapy (instead of self.bounds_tol)
 
         samples = np.atleast_2d(samples)
         prob = self.problem
@@ -599,24 +547,16 @@ class HRSampler(object):
             bounds = prob.variable_bounds
         else:
             raise ValueError(
-                "Wrong number of columns. Samples must have a "
+                "Wrong number of columns. samples must have a "
                 "column for each flux or variable defined in the "
-                "model."
+                "model!"
             )
 
         feasibility = np.abs(S.dot(samples.T).T - b).max(axis=1)
-        lb_error = (
-            samples
-            - bounds[
-                0,
-            ]
-        ).min(axis=1)
-        ub_error = (
-            bounds[
-                1,
-            ]
-            - samples
-        ).min(axis=1)
+        lb_error = (samples - bounds[0,]).min(axis=1)
+        ub_error = (bounds[1,] - samples).min(axis=1)
+
+        #if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
 
         #print(prob.inequalities.shape[0])
         if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
@@ -652,49 +592,144 @@ class HRSampler(object):
                     diff1
                 ).min(axis=0),
             )
+            #consts = prob.inequalities.dot(samples.T)
+            #lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1))
+            #ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1))
+
+        valid = (
+            (feasibility < self.val_feasibility_tol)
+            & (lb_error > -self.val_bounds_tol)
+            & (ub_error > -self.val_bounds_tol)
+        )
+        codes = np.repeat("", valid.shape[0]).astype(np.dtype((str, 3)))
+        codes[valid] = "v"
+        codes[lb_error <= -self.val_bounds_tol] = np.char.add(
+            codes[lb_error <= -self.val_bounds_tol], "l"
+        )
+        codes[ub_error <= -self.val_bounds_tol] = np.char.add(
+            codes[ub_error <= -self.val_bounds_tol], "u"
+        )
+        codes[feasibility > self.val_feasibility_tol] = np.char.add(
+            codes[feasibility > self.val_feasibility_tol], "e"
+        )
+
+        return codes
+
+
+        ######################3
+        #####Original +modification because of constraints##########
+
+        #samples = np.atleast_2d(samples)
+        #prob = self.problem
+
+        #if samples.shape[1] == len(self.model.reactions):
+            #S = create_stoichiometric_matrix(self.model)
+            #b = np.array(
+                #[self.model.constraints[m.id].lb for m in self.model.metabolites]
+            #)
+            #bounds = np.array([r.bounds for r in self.model.reactions]).T
+        #elif samples.shape[1] == len(self.model.variables):
+            #S = prob.equalities
+            #b = prob.b
+            #bounds = prob.variable_bounds
+        #else:
+            #raise ValueError(
+                #"Wrong number of columns. Samples must have a "
+                #"column for each flux or variable defined in the "
+                #"model."
+            #)
+
+        #feasibility = np.abs(S.dot(samples.T).T - b).max(axis=1)
+        #lb_error = (
+            #samples
+            #- bounds[
+                #0,
+            #]
+        #).min(axis=1)
+        #ub_error = (
+            #bounds[
+                #1,
+            #]
+            #- samples
+        #).min(axis=1)
+
+        ##print(prob.inequalities.shape[0])
+        #if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
+            #print(prob.bounds[0, ])
+            #consts = prob.inequalities.dot(samples.T)
+
+            ##added and changed:
+            ##print(prob.bounds[0, ].shape)
+            ##print(consts.shape)
+            ##print(lb_error.shape)
+            #diff0 = np.zeros(consts.shape)
+            #diff1 = np.zeros(consts.shape)
+            #for i in range(0,len(prob.bounds[0, ])):
+                #if prob.bounds[0, i]!=None or prob.bounds[0, i]!=False:
+                    #diff0[i,:] = consts[i] - prob.bounds[0, i]
+                #else:
+                    #diff0[i,:] = lb_error[i]
+                #if prob.bounds[1, i]!=None or prob.bounds[1, i]!=False:
+                    #diff1[i,:] = prob.bounds[1, i] - consts[i]
+                #else:
+                    #diff1[i,:] = ub_error[i]
 
             #lb_error = np.minimum(
                 #lb_error,
                 #(
-                    #consts
-                    #- prob.bounds[
-                        #0,
-                    #]
-                #).min(axis=1),
+                    #diff0
+                #).min(axis=0),
             #)
         ##if prob.bounds[1, ]:
             #ub_error = np.minimum(
                 #ub_error,
                 #(
-                    #prob.bounds[
-                        #1,
-                    #]
-                    #- consts
-                #).min(axis=1),
+                    #diff1
+                #).min(axis=0),
             #)
 
+            ##lb_error = np.minimum(
+                ##lb_error,
+                ##(
+                    ##consts
+                    ##- prob.bounds[
+                        ##0,
+                    ##]
+                ##).min(axis=1),
+            ##)
+        ###if prob.bounds[1, ]:
+            ##ub_error = np.minimum(
+                ##ub_error,
+                ##(
+                    ##prob.bounds[
+                        ##1,
+                    ##]
+                    ##- consts
+                ##).min(axis=1),
+            ##)
 
-        valid = (
-            (feasibility < self.feasibility_tol)
-            & (lb_error > -self.bounds_tol)
-            & (ub_error > -self.bounds_tol)
-        )
-        codes = np.repeat("", valid.shape[0]).astype(np.dtype((str, 3)))
-        codes[valid] = "v"
-        codes[lb_error <= -self.bounds_tol] = np.char.add(
-            codes[lb_error <= -self.bounds_tol], "l"
-        )
-        codes[ub_error <= -self.bounds_tol] = np.char.add(
-            codes[ub_error <= -self.bounds_tol], "u"
-        )
-        codes[feasibility > self.feasibility_tol] = np.char.add(
-            codes[feasibility > self.feasibility_tol], "e"
-        )
-        #if np.any(feasibility) > self.feasibility_tol:
-            #print('feasibility', feasibility)
+
+        #valid = (
+            #(feasibility < self.feasibility_tol)
+            #& (lb_error > -self.bounds_tol)
+            #& (ub_error > -self.bounds_tol)
+        #)
+        #codes = np.repeat("", valid.shape[0]).astype(np.dtype((str, 3)))
+        #codes[valid] = "v"
+        #codes[lb_error <= -self.bounds_tol] = np.char.add(
+            #codes[lb_error <= -self.bounds_tol], "l"
+        #)
+        #codes[ub_error <= -self.bounds_tol] = np.char.add(
+            #codes[ub_error <= -self.bounds_tol], "u"
+        #)
+        #codes[feasibility > self.feasibility_tol] = np.char.add(
+            #codes[feasibility > self.feasibility_tol], "e"
+        #)
+        ##if np.any(feasibility) > self.feasibility_tol:
+            ##print('feasibility', feasibility)
 
 
-        return codes
+        #return codes
 
 
 # Required by ACHRSampler and OptGPSampler
