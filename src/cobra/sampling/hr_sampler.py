@@ -553,7 +553,7 @@ class HRSampler(object):
             )
 
         feasibility = np.abs(S.dot(samples.T).T - b).max(axis=1)
-        print('feas', feasibility.shape)
+        #print('feas', feasibility.shape)
         lb_error = (samples - bounds[0,]).min(axis=1)
         ub_error = (bounds[1,] - samples).min(axis=1)
 
