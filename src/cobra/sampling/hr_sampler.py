@@ -573,14 +573,14 @@ class HRSampler(object):
             #print('before', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1)))
             #consts = consts.reshape((consts.shape[0],))
             #print(prob.bounds[0,].shape)
-            try:
-                lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1))
-            except IndexError:
-                lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min())
-            try:
-                ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1))
-            except IndexError:
-                ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min())
+            #try:
+            lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1))
+            #except IndexError:
+                #lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min())
+            #try:
+            ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1))
+            #except IndexError:
+                #ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min())
 
             #print('after', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=0)))#axis=1))
             #lb_error = lb_error.reshape((lb_error.shape[0],1))
@@ -619,15 +619,15 @@ class HRSampler(object):
             codes[ub_error <= -self.val_bounds_tol], "u"
         )
         #print('feas', feasibility.shape)
-        try:
-            codes[feasibility > self.val_feasibility_tol] = np.char.add(
-                codes[feasibility > self.val_feasibility_tol], "e"
-            )
-        except IndexError:
-            feasibility=feasibility.min()
-            codes[feasibility > self.val_feasibility_tol] = np.char.add(
-                codes[feasibility > self.val_feasibility_tol], "e"
-            )
+        #try:
+        codes[feasibility > self.val_feasibility_tol] = np.char.add(
+            codes[feasibility > self.val_feasibility_tol], "e"
+        )
+        #except IndexError:
+            #feasibility=feasibility.min()
+            #codes[feasibility > self.val_feasibility_tol] = np.char.add(
+                #codes[feasibility > self.val_feasibility_tol], "e"
+            #)
         return codes
 
 
