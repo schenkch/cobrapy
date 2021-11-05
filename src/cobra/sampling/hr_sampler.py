@@ -567,6 +567,9 @@ class HRSampler(object):
             print('const', type(consts))
             print(type(prob.bounds[0,]))
             print(type(prob.bounds[1,]))
+            print(lb_error.shape)
+            print(consts.shape)
+            print(prob.bounds[0,].shape)
             #print('before', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1)))
             #consts = consts.reshape((consts.shape[0],))
             #print(prob.bounds[0,].shape)
@@ -621,7 +624,7 @@ class HRSampler(object):
                 codes[feasibility > self.val_feasibility_tol], "e"
             )
         except IndexError:
-            feasibility=feasibility.max()
+            feasibility=feasibility.min()
             codes[feasibility > self.val_feasibility_tol] = np.char.add(
                 codes[feasibility > self.val_feasibility_tol], "e"
             )
