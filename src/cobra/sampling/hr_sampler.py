@@ -517,7 +517,7 @@ class HRSampler(object):
         # introduce new parameter feas_tol for equality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
         if feas_tol is not None and feas_tol!=1e-7:
             self.val_feasibility_tol = feas_tol  # if user provided set to user tolerance
-            print('Different feasibility tolerance for validate function was provided, i.e.', feas_tol)
+            #print('Different feasibility tolerance for validate function was provided, i.e.', feas_tol)
         elif feas_tol==1e-7:
             self.val_feasibility_tol = feas_tol
         else:
@@ -526,7 +526,7 @@ class HRSampler(object):
         # introduce new parameter bounds_tol for inequality constraints, such that it can be user-defined and for MCMCACHRSampler class has new default value but just for validate function
         if bounds_tol is not None and bounds_tol!=1e-7:
             self.val_bounds_tol = bounds_tol  # if user provided set to user tolerance
-            print('Different bounds tolerance for validate function was provided, i.e.', bounds_tol)
+            #print('Different bounds tolerance for validate function was provided, i.e.', bounds_tol)
         elif bounds_tol==1e-7:
             self.val_bounds_tol = bounds_tol
         else:
