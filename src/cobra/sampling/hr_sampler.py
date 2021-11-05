@@ -608,11 +608,13 @@ class HRSampler(object):
         codes[lb_error <= -self.val_bounds_tol] = np.char.add(
             codes[lb_error <= -self.val_bounds_tol], "l"
         )
+        print(ub_error.shape)
         codes[ub_error <= -self.val_bounds_tol] = np.char.add(
             codes[ub_error <= -self.val_bounds_tol], "u"
         )
+        print(feasibility.shape)
         codes[feasibility > self.val_feasibility_tol] = np.char.add(
-            codes[np.any(feasibility) > self.val_feasibility_tol], "e"
+            codes[feasibility > self.val_feasibility_tol], "e"
         )
 
         return codes
