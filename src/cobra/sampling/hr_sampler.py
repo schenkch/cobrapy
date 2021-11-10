@@ -575,11 +575,11 @@ class HRSampler(object):
             #consts = consts.reshape((consts.shape[0],))
             #print(prob.bounds[0,].shape)
             #try:
-            lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1)).min(axis=0)
+            lb_error = np.minimum(lb_error, (consts.transpose() - prob.bounds[0,]).transpose().min(axis=1))
             #except IndexError:
                 #lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min())
             #try:
-            ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1)).min(axis=0)
+            ub_error = np.minimum(ub_error, (prob.bounds[1,].transpose() - consts).transpose().min(axis=1))
             #except IndexError:
                 #ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min())
 
