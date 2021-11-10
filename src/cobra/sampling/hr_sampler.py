@@ -563,6 +563,7 @@ class HRSampler(object):
         if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
 
             #Original:
+            print(prob.inequalities.shape)
             consts = prob.inequalities.dot(samples.T)
             print('const', type(consts))
             print(type(prob.bounds[0,]))
