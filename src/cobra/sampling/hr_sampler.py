@@ -560,29 +560,37 @@ class HRSampler(object):
         #if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
 
         #print(prob.inequalities.shape[0])
-        if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
 
-            #Original:
-            print(prob.inequalities.shape)
-            consts = prob.inequalities.dot(samples.T)
-            print('const', type(consts))
-            print(type(prob.bounds[0,]))
-            print(type(prob.bounds[1,]))
-            print(lb_error.shape)
-            print(consts.shape)
-            print(prob.bounds[0,].shape)
-            #print('before', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1)))
-            #consts = consts.reshape((consts.shape[0],))
+        ##############test#####################
+        #if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
+
+            ##Original:
+            #print(prob.inequalities.shape)
+            #consts = prob.inequalities.dot(samples.T)
+            #print('const', type(consts))
+            #print(type(prob.bounds[0,]))
+            #print(type(prob.bounds[1,]))
+            #print(lb_error.shape)
+            #print(consts.shape)
             #print(prob.bounds[0,].shape)
-            #try:
-            print(consts - prob.bounds[0,].reshape((prob.bounds[0,].shape[0],1)))
-            print((consts - prob.bounds[0,].reshape((prob.bounds[0,].shape[0],1))).min(axis=0))
-            print((consts - prob.bounds[0,].reshape((prob.bounds[0,].shape[0],1))).min(axis=0).transpose().shape)
-            lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=0).transpose())
-            #except IndexError:
-                #lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min())
-            #try:
-            ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=0).transpose())
+            ##print('before', np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1)))
+            ##consts = consts.reshape((consts.shape[0],))
+            ##print(prob.bounds[0,].shape)
+            ##try:
+            #print(consts - prob.bounds[0,].reshape((prob.bounds[0,].shape[0],1)))
+            #print((consts - prob.bounds[0,].reshape((prob.bounds[0,].shape[0],1))).min(axis=0))
+            #print((consts - prob.bounds[0,].reshape((prob.bounds[0,].shape[0],1))).min(axis=0).transpose().shape)
+            #lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=0).transpose())
+            ##except IndexError:
+                ##lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min())
+            ##try:
+            #ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=0).transpose())
+        #####################################
+
+        if samples.shape[1] == len(self.model.variables) and prob.inequalities.shape[0]:
+            consts = prob.inequalities.dot(samples.T)
+            lb_error = np.minimum(lb_error, (consts - prob.bounds[0,]).min(axis=1))
+            ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min(axis=1))
             #except IndexError:
                 #ub_error = np.minimum(ub_error, (prob.bounds[1,] - consts).min())
 
