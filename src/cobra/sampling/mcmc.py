@@ -119,9 +119,6 @@ class MCMCACHRSampler(HRSampler):
         # create a variable to store the best point we sampled
         self.bestSample = None
 
-        # create a variable to test if current sample is valid
-        #self.testprev = None
-
     def __single_iteration(self, lockCenter=False, validatecheck=False):
         """If lockCenter, do not update the center."""
 
@@ -131,36 +128,21 @@ class MCMCACHRSampler(HRSampler):
 
         # mix in the original warmup points to not get stuck
         delta = self.warmup[pi, ] - self.center
+        ## create testprev to check if current sample is valid
         testprev = step(self, self.prev, delta)
 
         ###########################
         #optional validation for posterior samples:
         if validatecheck:
             counter = 0
-            #self.testprev = self.prev#numpy.ndarray
-            #self.testprev = np.subtract(test[0::2], test[1::2])
-            #print('current sample', self.testprev)
-            #print('validatecheck in progress')
-            #print(self.testprev)
-            #print(np.transpose(self.testprev.shape))
-            #print('check sample:', self.validate(np.transpose(self.testprev)))
-            #print(self.validate(np.transpose(self.testprev), feas_tol=1e-6, bounds_tol=1e-6))
-            #if 'v' in str(self.validate(np.transpose(self.testprev))):
-            #if not any(element in 'v' for element in self.validate(np.transpose(self.testprev))):
-                #print('validcheck at', self.n_samples, 'results in ',  self.validate(np.transpose(self.testprev)))
             while counter<=nmax and not any(element in 'v' for element in self.validate(np.transpose(testprev), feas_tol=1e-6, bounds_tol=1e-6)):#first sample: #input have to be netsamples and in form samples x reactions#, feas_tol=1e-6, bounds_tol=1e-6)
                 if counter==nmax:
                     print('Tried to find valid sample', nmax, 'times without success')
                     sys.exit()
                 print('searching new valid sample as validate output=', self.validate(np.transpose(testprev)))#, feas_tol=1e-6, bounds_tol=1e-6))
-                #self.prev = savePrev
-                #display('1 pi', pi)
                 pi = np.random.randint(self.n_warmup)
-                #display('number of warmup samples', self.warmup.shape[0], self.n_warmup)
-                #display('2 pi', pi)
                 delta = self.warmup[pi, ] - self.center
                 testprev = step(self, testprev, delta)
-                #self.testprev = np.subtract(test[0::2], test[1::2])
                 counter += 1
         self.prev = testprev
         ###########################
