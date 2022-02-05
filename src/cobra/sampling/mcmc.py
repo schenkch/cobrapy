@@ -122,7 +122,7 @@ class MCMCACHRSampler(HRSampler):
     def __single_iteration(self, lockCenter=False, validatecheck=False):
         """If lockCenter, do not update the center."""
 
-        nmax = 30 #tries to find new valid sample maximum 10 times for each situation
+        nmax = 10 #tries to find new valid sample maximum 10 times for each situation
 
         pi = np.random.randint(self.n_warmup)
 
